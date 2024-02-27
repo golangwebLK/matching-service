@@ -55,11 +55,12 @@ pub struct Candidate {
 
 //传入所有候选人，按照打分进行排序，可以采用最大堆或者快排
 //可以通过多线程优化计算
-async fn set_score(candidate: Vec<Candidate>,attributes: HashMap<String,f64>) -> Result<Vec<Candidate>,Error>{
+async fn set_score(mut candidates: Vec<Candidate>, attributes: HashMap<String,f64>) -> Result<Vec<Candidate>,Error>{
     println!("{:?}",attributes);
     let score = 0.0;
-
-    Ok(candidate)
+    candidates.sort_by_key(|k| k.score);
+    candidates.reverse();
+    Ok(candidates)
 }
 
 
