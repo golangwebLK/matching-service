@@ -31,7 +31,7 @@ pub fn score_birth_year(
 //高的时候的惩罚到b = 15
 //矮的时候的惩罚到b = 10
 //惩罚函数
-fn parabola(
+pub fn parabola(
     x: f64,
     a: &f64,
     b: f64
