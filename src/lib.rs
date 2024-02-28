@@ -1,9 +1,9 @@
 mod scoring_rules;
 
-use std::collections::HashMap;
-use std::fmt::Error;
 use axum::http::StatusCode;
 use axum::Json;
+use std::collections::HashMap;
+use std::fmt::Error;
 
 use serde::{Deserialize, Serialize};
 
@@ -11,42 +11,40 @@ pub async fn root() -> &'static str {
     "matching!"
 }
 
-#[derive(Deserialize,Serialize, Debug)]
-pub struct Data{
-    candidate: Candidate,//当前候选匹配条件
-    candidates: Vec<Candidate>,//候选人
-    attributes: HashMap<String,f64>,//属性权重
+#[derive(Deserialize, Serialize, Debug)]
+pub struct Data {
+    candidate: Candidate,             //当前候选匹配条件
+    candidates: Vec<Candidate>,       //候选人
+    attributes: HashMap<String, f64>, //属性权重
 }
 
-#[derive(Deserialize,Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct Response<T> {
     code: u32,
     message: String,
     data: T,
 }
 
-
-pub async fn matching(
-    Json(payload): Json<Data>,
-) -> (StatusCode, Json<Response<Vec<Candidate>>>) {
-    return match set_score(payload.candidates,payload.candidate, payload.attributes).await {
-        Ok(candidates) => {
-            (StatusCode::OK, Json(Response {
+pub async fn matching(Json(payload): Json<Data>) -> (StatusCode, Json<Response<Vec<Candidate>>>) {
+    return match set_score(payload.candidates, payload.candidate, payload.attributes).await {
+        Ok(candidates) => (
+            StatusCode::OK,
+            Json(Response {
                 code: 200,
                 message: "OK".to_string(),
                 data: candidates,
-            }))
-        }
-        Err(e) => {
-            (StatusCode::INTERNAL_SERVER_ERROR, Json(Response {
+            }),
+        ),
+        Err(e) => (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Json(Response {
                 code: 500,
                 message: format!("service error:{}", e),
                 data: vec![],
-            }))
-        }
-    }
+            }),
+        ),
+    };
 }
-
 
 ///打分策略
 /// birth_year 通过年龄匹配，正好合适就给出所有权重分数，
@@ -58,11 +56,11 @@ pub async fn matching(
 /// height，weight不匹配者均相同惩罚
 /// original_family_composition，parentts_situation根据标签对比进行惩罚
 
-#[derive(Deserialize,Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct Candidate {
     birth_year: Option<i8>,
     work: Option<Vec<i8>>,
-    qualification: Option<String>,
+    qualification: Option<i8>,
     current_place: Option<Vec<i8>>,
     ancestal_home: Option<Vec<i8>>,
     economic: Option<Vec<String>>,
@@ -76,21 +74,24 @@ pub struct Candidate {
 async fn set_score(
     mut candidates: Vec<Candidate>,
     candidate: Candidate,
-    attributes: HashMap<String,f64>
-) -> Result<Vec<Candidate>,Error>{
+    attributes: HashMap<String, f64>,
+) -> Result<Vec<Candidate>, Error> {
     for c in &mut candidates {
-        c.score = calculate_total_score(c,&candidate, &attributes)?;
+        c.score = calculate_total_score(c, &candidate, &attributes)?;
     }
-    candidates.sort_by(|a, b| b.score.partial_cmp(&a.score)
-        .unwrap_or(std::cmp::Ordering::Equal));
+    candidates.sort_by(|a, b| {
+        b.score
+            .partial_cmp(&a.score)
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
     Ok(candidates)
 }
 
 fn calculate_total_score(
     candidate: &Candidate,
     candidate_condition: &Candidate,
-    attributes: &HashMap<String, f64>
-) -> Result<f64,Error> {
+    attributes: &HashMap<String, f64>,
+) -> Result<f64, Error> {
     let mut total_score = 0.0;
     let properties = vec![
         "birth_year",
@@ -102,12 +103,11 @@ fn calculate_total_score(
         "height",
         "weight",
         "original_family_composition",
-        "parents_situation"
+        "parents_situation",
     ];
-    for property_name in properties{
+    for property_name in properties {
         let score_function = scoring_rules::get_score_function(property_name).unwrap();
         total_score += score_function(candidate, candidate_condition, attributes)?;
     }
     Ok(total_score)
 }
-
