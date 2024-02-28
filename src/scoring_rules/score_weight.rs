@@ -1,5 +1,12 @@
 use std::collections::HashMap;
+use std::fmt::Error;
+use crate::Candidate;
 
-pub fn score_weight(weight: &i32, attributes: &HashMap<String, f64>) -> f64 {
-    0.0
+
+pub fn score_weight(
+    candidate: &Candidate,
+    candidate_condition: &Candidate,
+    attributes: &HashMap<String, f64>
+) -> Result<f64,Error> {
+    Ok(0.0)
 }

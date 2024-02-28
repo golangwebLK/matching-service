@@ -2,8 +2,7 @@ use std::collections::HashMap;
 use std::fmt::Error;
 use crate::Candidate;
 
-
-pub fn score_original_family_composition(
+pub fn score_parents_situation(
     candidate: &Candidate,
     candidate_condition: &Candidate,
     attributes: &HashMap<String, f64>
