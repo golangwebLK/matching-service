@@ -18,10 +18,7 @@ mod score_economic;
 mod score_height;
 //体重打分规则
 mod score_weight;
-//原生家庭状况打分规则
-mod score_original_family_composition;
-//父母状况打分规则
-mod score_parents_situation;
+
 
 
 pub fn get_score_function(
@@ -40,8 +37,6 @@ pub fn get_score_function(
         "economic" => Ok(score_economic::score_economic),
         "height" => Ok(score_height::score_height),
         "weight" => Ok(score_weight::score_weight),
-        "original_family_composition" => Ok(score_original_family_composition::score_original_family_composition),
-        "parents_situation" => Ok(score_parents_situation::score_parents_situation),
         _ => Err(std::io::Error::new(std::io::ErrorKind::Other,"没有找到对应属性"))
     }
 }

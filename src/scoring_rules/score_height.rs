@@ -13,7 +13,7 @@ pub fn score_height(
         match &candidate.height {
             None => return Ok(weights_score / 2.0),
             Some(height) => {
-                let difference = (height - height_condition).abs() as f64;
+                let difference = (height - height_condition).abs();
                 let score = parabola(difference, weights_score, 10f64);
                 if score < 0.0 {
                     return Ok(0.0);

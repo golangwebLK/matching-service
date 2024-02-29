@@ -58,16 +58,14 @@ pub async fn matching(Json(payload): Json<Data>) -> (StatusCode, Json<Response<V
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Candidate {
-    birth_year: Option<i8>,
-    work: Option<Vec<i8>>,
-    qualification: Option<i8>,
-    current_place: Option<Vec<i8>>,
-    ancestal_home: Option<Vec<i8>>,
-    economic: Option<Vec<String>>,
-    height: Option<i32>,
-    weight: Option<i32>,
-    original_family_composition: Option<Vec<String>>,
-    parents_situation: Option<Vec<String>>,
+    birth_year: Option<i8>,//实际年龄
+    work: Option<Vec<i8>>,//按照包含关系，填入编号
+    qualification: Option<i8>,//学历编号1-6，
+    current_place: Option<Vec<i8>>,//按照包含关系，填入编号
+    ancestal_home: Option<Vec<i8>>,//按照包含关系，填入编号
+    economic: Option<f64>,//实际财富
+    height: Option<f64>,//实际身高
+    weight: Option<f64>,//实际体重
     score: f64,
 }
 
@@ -102,8 +100,6 @@ fn calculate_total_score(
         "economic",
         "height",
         "weight",
-        "original_family_composition",
-        "parents_situation",
     ];
     for property_name in properties {
         let score_function = scoring_rules::get_score_function(property_name).unwrap();

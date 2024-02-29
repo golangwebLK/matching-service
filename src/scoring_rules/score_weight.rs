@@ -13,7 +13,7 @@ pub fn score_weight(
         match &candidate.weight {
             None => return Ok(weights_score / 2.0),
             Some(weight) => {
-                let difference = (weight - weight_condition).abs() as f64;
+                let difference = (weight - weight_condition).abs();
                 let score = parabola(difference, weights_score, 15f64);
                 if score < 0.0 {
                     return Ok(0.0);
