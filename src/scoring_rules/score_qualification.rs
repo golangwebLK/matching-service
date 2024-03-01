@@ -2,7 +2,7 @@ use crate::scoring_rules::score_birth_year::parabola;
 use crate::Candidate;
 use std::collections::HashMap;
 use std::fmt::Error;
-//学历分为6阶：小学1，初中2，高中3，本科4，硕士5，博士6
+//学历分为6阶：小学1，初中2，高中3，大专4，本科5，硕士6，博士7
 pub fn score_qualification(
     candidate: &Candidate,
     candidate_condition: &Candidate,
@@ -14,7 +14,7 @@ pub fn score_qualification(
             None => return Ok(weights_score / 2.0),
             Some(qualification) => {
                 let difference = (qualification - qualification_condition).abs() as f64;
-                let score = parabola(difference, weights_score, 5f64);
+                let score = parabola(difference, weights_score, 6f64);
                 return Ok(score);
             }
         }
