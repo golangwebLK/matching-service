@@ -58,6 +58,7 @@ pub async fn matching(Json(payload): Json<Data>) -> (StatusCode, Json<Response<V
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Candidate {
+    id: Option<i32>, //身份id
     birth_year: Option<i8>,//实际年龄
     work: Option<Vec<i8>>,//按照包含关系，填入编号
     qualification: Option<i8>,//学历编号1-6，
