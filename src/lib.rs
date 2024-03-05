@@ -26,6 +26,7 @@ pub struct Response<T> {
 }
 
 pub async fn matching(Json(payload): Json<Data>) -> (StatusCode, Json<Response<Vec<Candidate>>>) {
+    println!("{:?}",payload);
     return match set_score(payload.candidates, payload.candidate, payload.attributes).await {
         Ok(candidates) => (
             StatusCode::OK,
@@ -40,7 +41,7 @@ pub async fn matching(Json(payload): Json<Data>) -> (StatusCode, Json<Response<V
             Json(Response {
                 code: 500,
                 message: format!("service error:{}", e),
-                data: vec![],
+                data: Vec::<Candidate>::new(),
             }),
         ),
     };
@@ -58,11 +59,12 @@ pub async fn matching(Json(payload): Json<Data>) -> (StatusCode, Json<Response<V
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Candidate {
-    birth_year: Option<i8>,//实际年龄
-    work: Option<Vec<i8>>,//按照包含关系，填入编号
+    person_code: Option<String>,
+    birth_year: Option<i32>,//实际年龄
+    work: Option<Vec<i32>>,//按照包含关系，填入编号
     qualification: Option<i8>,//学历编号1-6，
-    current_place: Option<Vec<i8>>,//按照包含关系，填入编号
-    ancestal_home: Option<Vec<i8>>,//按照包含关系，填入编号
+    current_place: Option<Vec<i32>>,//按照包含关系，填入编号
+    ancestal_home: Option<Vec<i32>>,//按照包含关系，填入编号
     economic: Option<f64>,//实际财富
     height: Option<f64>,//实际身高
     weight: Option<f64>,//实际体重
