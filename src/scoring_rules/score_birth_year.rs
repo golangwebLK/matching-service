@@ -30,5 +30,6 @@ pub fn score_birth_year(
 //矮的时候的惩罚到b = 10
 //惩罚函数
 pub fn parabola(x: f64, a: &f64, b: f64) -> f64 {
-    a * (x - b).powi(2)
+    let y = -x.powi(2)+b.powi(2);
+    a*y/b.powi(2)
 }

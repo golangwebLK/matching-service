@@ -26,6 +26,7 @@ pub struct Response<T> {
 }
 
 pub async fn matching(Json(payload): Json<Data>) -> (StatusCode, Json<Response<Vec<Candidate>>>) {
+    println!("{:?}",payload);
     return match set_score(payload.candidates, payload.candidate, payload.attributes).await {
         Ok(candidates) => (
             StatusCode::OK,
@@ -58,12 +59,12 @@ pub async fn matching(Json(payload): Json<Data>) -> (StatusCode, Json<Response<V
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Candidate {
-    id: Option<i32>, //身份id
-    birth_year: Option<i8>,//实际年龄
-    work: Option<Vec<i8>>,//按照包含关系，填入编号
+    person_code: Option<String>, //身份id
+    birth_year: Option<i32>,//实际年龄
+    work: Option<Vec<i32>>,//按照包含关系，填入编号
     qualification: Option<i8>,//学历编号1-6，
-    current_place: Option<Vec<i8>>,//按照包含关系，填入编号
-    ancestal_home: Option<Vec<i8>>,//按照包含关系，填入编号
+    current_place: Option<Vec<i32>>,//按照包含关系，填入编号
+    ancestal_home: Option<Vec<i32>>,//按照包含关系，填入编号
     economic: Option<f64>,//实际财富
     height: Option<f64>,//实际身高
     weight: Option<f64>,//实际体重
@@ -76,7 +77,8 @@ async fn set_score(
     attributes: HashMap<String, f64>,
 ) -> Result<Vec<Candidate>, Error> {
     for c in &mut candidates {
-        c.score = calculate_total_score(c, &candidate, &attributes)?;
+        let rounded_num_str = format!("{:.2}", calculate_total_score(c, &candidate, &attributes)?);
+        c.score = rounded_num_str.parse::<f64>().unwrap();
     }
     candidates.sort_by(|a, b| {
         b.score
