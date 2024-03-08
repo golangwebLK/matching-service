@@ -33,7 +33,7 @@ pub fn get_score_function(
         "work" => Ok(score_work::score_work),
         "qualification" => Ok(score_qualification::score_qualification),
         "current_place" => Ok(score_current_place::score_current_place),
-        "ancestal_home" => Ok(score_ancestal_home::score_ancestal_home),
+        "ancestral_home" => Ok(score_ancestal_home::score_ancestal_home),
         "economic" => Ok(score_economic::score_economic),
         "height" => Ok(score_height::score_height),
         "weight" => Ok(score_weight::score_weight),

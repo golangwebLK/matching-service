@@ -26,7 +26,6 @@ pub struct Response<T> {
 }
 
 pub async fn matching(Json(payload): Json<Data>) -> (StatusCode, Json<Response<Vec<Candidate>>>) {
-    println!("{:?}",payload);
     return match set_score(payload.candidates, payload.candidate, payload.attributes).await {
         Ok(candidates) => (
             StatusCode::OK,
@@ -64,7 +63,7 @@ pub struct Candidate {
     work: Option<Vec<i32>>,//按照包含关系，填入编号
     qualification: Option<i8>,//学历编号1-6，
     current_place: Option<Vec<i32>>,//按照包含关系，填入编号
-    ancestal_home: Option<Vec<i32>>,//按照包含关系，填入编号
+    ancestral_home: Option<Vec<i32>>,//按照包含关系，填入编号
     economic: Option<f64>,//实际财富
     height: Option<f64>,//实际身高
     weight: Option<f64>,//实际体重
@@ -99,14 +98,15 @@ fn calculate_total_score(
         "work",
         "qualification",
         "current_place",
-        "ancestal_home",
+        "ancestral_home",
         "economic",
         "height",
         "weight",
     ];
     for property_name in properties {
         let score_function = scoring_rules::get_score_function(property_name).unwrap();
-        total_score += score_function(candidate, candidate_condition, attributes)?;
+        let score = score_function(candidate, candidate_condition, attributes)?;
+        total_score += score;
     }
     Ok(total_score)
 }

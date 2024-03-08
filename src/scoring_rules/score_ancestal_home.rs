@@ -8,9 +8,9 @@ pub fn score_ancestal_home(
     candidate_condition: &Candidate,
     attributes: &HashMap<String, f64>,
 ) -> Result<f64, Error> {
-    if let Some(ancestal_home_condition) = &candidate_condition.ancestal_home {
-        let weights_score = attributes.get("ancestal_home").ok_or(Error)?;
-        match &candidate.ancestal_home {
+    if let Some(ancestal_home_condition) = &candidate_condition.ancestral_home {
+        let weights_score = attributes.get("ancestral_home").ok_or(Error)?;
+        match &candidate.ancestral_home {
             None => return Ok(weights_score / 2.0),
             Some(ancestal_home) => {
                 let length = ancestal_home.len();
